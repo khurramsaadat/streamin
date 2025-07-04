@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { FaFilter, FaUser } from 'react-icons/fa';
 
+interface MoviesProps {
+  search: string;
+}
+
 const movies = [
   {
     id: '1',
@@ -61,31 +65,19 @@ function MoviePoster({ movie }: { movie: typeof movies[0] }) {
   );
 }
 
-export default function Movies() {
+export default function Movies({ search }: MoviesProps) {
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <>
       {/* Top bar */}
       <div className="flex items-center justify-between w-full">
-        <form className="flex-1 max-w-xl mr-4">
-          <input
-            type="text"
-            placeholder="Enter keywords..."
-            className="w-full bg-gray-800 text-gray-200 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
-            disabled
-          />
-        </form>
-        <div className="flex items-center gap-4">
-          <Link to="/login" className="flex items-center gap-1 text-gray-300 hover:text-white text-sm">
-            <FaUser className="text-base" /> Login
-          </Link>
-          <button className="flex items-center gap-1 bg-gray-800 text-gray-300 hover:text-white px-3 py-2 rounded text-sm" disabled>
-            <FaFilter className="text-base" /> Filter
-          </button>
-        </div>
+        {/* No search bar or login/filter buttons here */}
       </div>
       <h2 className="text-xl font-semibold mb-6 w-full">Popular Movies</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <MoviePoster key={movie.id} movie={movie} />
         ))}
       </div>
