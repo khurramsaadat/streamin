@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FaHome, FaRocket, FaFilm, FaTv, FaFilter } from 'react-icons/fa';
+import { useLocale } from '../lib/LocaleContext';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -13,75 +14,99 @@ interface SidebarProps {
   onFilterClick?: () => void;
 }
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen, genreOpen, setGenreOpen, countryOpen, setCountryOpen, genres, countries, onFilterClick }: SidebarProps) {
+const languages = [
+  { code: 'en-US', label: 'English (US)' },
+  { code: 'es-ES', label: 'Español (ES)' },
+  { code: 'fr-FR', label: 'Français (FR)' },
+  { code: 'de-DE', label: 'Deutsch (DE)' },
+  { code: 'zh-CN', label: '中文 (CN)' },
+  // Add more as needed
+];
+const regions = [
+  { code: 'US', label: 'United States' },
+  { code: 'ES', label: 'Spain' },
+  { code: 'FR', label: 'France' },
+  { code: 'DE', label: 'Germany' },
+  { code: 'CN', label: 'China' },
+  // Add more as needed
+];
+
+export default function Sidebar({
+  sidebarOpen,
+  setSidebarOpen,
+  genreOpen,
+  setGenreOpen,
+  countryOpen,
+  setCountryOpen,
+  genres,
+  countries,
+  onFilterClick,
+}: SidebarProps) {
+  const { language, region, setLanguage, setRegion } = useLocale();
+
   return (
-    <aside className={`fixed top-14 left-0 h-[calc(100vh-3.5rem)] w-72 bg-gray-900 shadow-lg z-40 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-200 md:relative md:top-0 md:h-full md:translate-x-0 md:w-72 md:block`}>
-      <div className="flex flex-col h-full justify-between">
-        <div>
-          <nav className="flex flex-col gap-1 p-4">
-            <Link to="/" className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800 text-base"><FaHome className="text-lg" />Home</Link>
-            <Link to="/top-imdb" className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800 text-base"><FaRocket className="text-lg" />Top IMDB</Link>
-            <Link to="/movies" className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800 text-base"><FaFilm className="text-lg" />Movies</Link>
-            <Link to="/tv-shows" className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800 text-base"><FaTv className="text-lg" />TV Shows</Link>
-            <button
-              className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-gray-800 text-base w-full text-left mt-2"
-              onClick={onFilterClick}
-            >
-              <FaFilter className="text-lg" />Filter
-            </button>
-          </nav>
-          {/* Genre Accordion */}
-          <div className="border-t border-gray-700">
-            <button onClick={() => setGenreOpen(!genreOpen)} className="w-full flex items-center justify-between px-4 py-2 font-semibold text-base focus:outline-none">
-              Genre
-              <svg className={`w-5 h-5 transform transition-transform ${genreOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            {genreOpen && (
-              <div className="px-4 pb-2">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
-                  {genres.map((genre) => (
-                    <span
-                      key={genre}
-                      className="text-xs text-gray-400 hover:text-white hover:underline cursor-pointer py-0.5"
-                    >
-                      {genre}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          {/* Country Accordion */}
-          <div className="border-t border-gray-700">
-            <button onClick={() => setCountryOpen(!countryOpen)} className="w-full flex items-center justify-between px-4 py-2 font-semibold text-base focus:outline-none">
-              Country
-              <svg className={`w-5 h-5 transform transition-transform ${countryOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-            </button>
-            {countryOpen && (
-              <div className="px-4 pb-2">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
-                  {countries.map((country) => (
-                    <span
-                      key={country}
-                      className="text-xs text-gray-400 hover:text-white hover:underline cursor-pointer py-0.5"
-                    >
-                      {country}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+    <aside
+      className={`fixed top-0 left-0 z-40 h-full w-72 bg-gray-900 text-white shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:shadow-none`}
+      aria-label="Sidebar navigation"
+      role="complementary"
+    >
+      <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+          <span className="text-lg font-bold tracking-wide">AI flix</span>
+          <button className="md:hidden" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
         </div>
-        {/* Sidebar Footer */}
+        <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto" aria-label="Main navigation" role="navigation">
+          <Link to="/" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-800" aria-label="Home">
+            <FaHome /> Home
+          </Link>
+          <Link to="/movies" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-800" aria-label="Movies">
+            <FaFilm /> Movies
+          </Link>
+          <Link to="/tv-shows" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-800" aria-label="TV Shows">
+            <FaTv /> TV Shows
+          </Link>
+          <Link to="/top-imdb" className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-800" aria-label="Top IMDB">
+            <FaRocket /> Top IMDB
+          </Link>
+          <button className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-800" onClick={onFilterClick} aria-label="Open filter modal">
+            <FaFilter /> Filter
+          </button>
+          {/* Language/Region Selector */}
+          <div className="mt-6">
+            <label className="block text-xs text-gray-400 mb-1" htmlFor="language-select">Language</label>
+            <select
+              id="language-select"
+              className="w-full rounded bg-gray-800 text-white px-2 py-1 mb-2"
+              value={language}
+              onChange={e => setLanguage(e.target.value)}
+              aria-label="Select language"
+            >
+              {languages.map(lang => (
+                <option key={lang.code} value={lang.code}>{lang.label}</option>
+              ))}
+            </select>
+            <label className="block text-xs text-gray-400 mb-1" htmlFor="region-select">Region</label>
+            <select
+              id="region-select"
+              className="w-full rounded bg-gray-800 text-white px-2 py-1"
+              value={region}
+              onChange={e => setRegion(e.target.value)}
+              aria-label="Select region"
+            >
+              {regions.map(reg => (
+                <option key={reg.code} value={reg.code}>{reg.label}</option>
+              ))}
+            </select>
+          </div>
+        </nav>
         <div className="border-t border-gray-700 p-4 text-xs text-gray-400">
           <div className="flex flex-wrap gap-x-2 gap-y-1 mb-2">
             <a href="#" className="hover:text-red-400">Terms of service</a> -
-            <a href="#" className="hover:text-red-400">Contact</a> -
-            <a href="#" className="hover:text-red-400">Sitemap</a> -
-            <a href="#" className="hover:text-red-400">FAQ</a>
+            <a href="#" className="hover:text-red-400">Contact</a>
           </div>
-          <div className="pt-2">© 2020 BraFlix</div>
+          <div>© {new Date().getFullYear()} AI flix. All rights reserved.</div>
         </div>
       </div>
     </aside>

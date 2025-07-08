@@ -1,192 +1,100 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
+import { getTrending, getPosterUrl, searchTMDB } from '../lib/tmdb';
+import { useTMDBConfig } from '../lib/TMDBConfigContext';
+import { useLocale } from '../lib/LocaleContext';
+import { FaDatabase } from 'react-icons/fa';
 
 interface HomeProps {
   search: string;
 }
 
-// Featured movies for carousel
-const featuredMovies = [
-  {
-    id: '1',
-    title: 'The Sandman',
-    image: 'https://images.pexels.com/photos/799137/pexels-photo-799137.jpeg',
-    quality: 'HD',
-    season: '2',
-    episode: '6',
-  },
-  {
-    id: '2',
-    title: 'The Old Guard 2',
-    image: 'https://images.pexels.com/photos/799102/pexels-photo-799102.jpeg',
-    quality: 'HD',
-    year: '2025',
-    duration: '104m',
-  },
-  {
-    id: '3',
-    title: 'Ironheart',
-    image: 'https://images.pexels.com/photos/799122/pexels-photo-799122.jpeg',
-    quality: 'HD',
-    season: '1',
-    episode: '6',
-  },
-  {
-    id: '4',
-    title: 'Ballerina',
-    image: 'https://images.pexels.com/photos/799123/pexels-photo-799123.jpeg',
-    quality: 'HD',
-    year: '2025',
-    duration: '125m',
-  },
-  {
-    id: '5',
-    title: 'Thunderbolts*',
-    image: 'https://images.pexels.com/photos/799124/pexels-photo-799124.jpeg',
-    quality: 'HD',
-    year: '2025',
-    duration: '127m',
-  },
-  {
-    id: '6',
-    title: 'Squid Game',
-    image: 'https://images.pexels.com/photos/799125/pexels-photo-799125.jpeg',
-    quality: 'HD',
-    season: '3',
-    episode: '6',
-  },
-  {
-    id: '7',
-    title: 'Final Destination Bloodlines',
-    image: 'https://images.pexels.com/photos/799126/pexels-photo-799126.jpeg',
-    quality: 'HD',
-    year: '2025',
-    duration: '110m',
-  },
-];
-
-// Trending movies (separate from featured)
-const trendingMovies = [
-  {
-    id: '8',
-    title: 'The Twisters',
-    image: 'https://images.pexels.com/photos/799127/pexels-photo-799127.jpeg',
-    quality: 'HD',
-    year: '2024',
-    duration: '87m',
-  },
-  {
-    id: '9',
-    title: 'Distant',
-    image: 'https://images.pexels.com/photos/799128/pexels-photo-799128.jpeg',
-    quality: 'HD',
-    year: '2024',
-    duration: '105m',
-  },
-  {
-    id: '10',
-    title: 'Bring Her Back',
-    image: 'https://images.pexels.com/photos/799129/pexels-photo-799129.jpeg',
-    quality: 'HD',
-    year: '2025',
-    duration: '120m',
-  },
-  // ...add more trending movies
-];
-
-// Trending TV shows (mock data)
-const trendingTV = [
-  {
-    id: '11',
-    title: 'Squid Game',
-    image: 'https://images.pexels.com/photos/799125/pexels-photo-799125.jpeg',
-    quality: 'HD',
-    season: '3',
-    episode: '6',
-  },
-  {
-    id: '12',
-    title: 'The Sandman',
-    image: 'https://images.pexels.com/photos/799137/pexels-photo-799137.jpeg',
-    quality: 'HD',
-    season: '2',
-    episode: '6',
-  },
-  // ...add more trending TV shows
-];
+function truncateTitle(title: string) {
+  return title.length > 20 ? title.slice(0, 20) + '...' : title;
+}
 
 export default function Home({ search }: HomeProps) {
-  const [trendingTab, setTrendingTab] = useState<'movies' | 'tv'>('movies');
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const [moviesData, setMoviesData] = useState<any[]>([]);
+  const [showsData, setShowsData] = useState<any[]>([]);
+  const [loadingMovies, setLoadingMovies] = useState(true);
+  const [loadingShows, setLoadingShows] = useState(true);
+  const [errorMovies, setErrorMovies] = useState<string | null>(null);
+  const [errorShows, setErrorShows] = useState<string | null>(null);
+  const tmdbConfig = useTMDBConfig();
+  const locale = useLocale();
 
-  // Filter trending grid by search
-  const filteredTrending = (trendingTab === 'movies' ? trendingMovies : trendingTV).filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    setLoadingMovies(true);
+    setErrorMovies(null);
+    const fetchMovies = search
+      ? searchTMDB('movie', search, 1, locale)
+      : getTrending('movie', 1, locale);
+    fetchMovies
+      .then((results) => setMoviesData(results))
+      .catch(() => setErrorMovies('Failed to fetch trending movies'))
+      .finally(() => setLoadingMovies(false));
+  }, [search, locale.language, locale.region]);
 
-  // Carousel scroll logic
-  const scrollCarousel = (dir: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const cardWidth = carouselRef.current.firstElementChild?.clientWidth || 220;
-      carouselRef.current.scrollBy({
-        left: dir === 'left' ? -cardWidth * 3 : cardWidth * 3,
-        behavior: 'smooth',
-      });
-    }
-  };
+  useEffect(() => {
+    setLoadingShows(true);
+    setErrorShows(null);
+    const fetchShows = search
+      ? searchTMDB('tv', search, 1, locale)
+      : getTrending('tv', 1, locale);
+    fetchShows
+      .then((results) => setShowsData(results))
+      .catch(() => setErrorShows('Failed to fetch trending TV shows'))
+      .finally(() => setLoadingShows(false));
+  }, [search, locale.language, locale.region]);
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Carousel */}
-      <div className="relative">
-        <button
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-900/80 hover:bg-gray-800 rounded-full p-2 shadow-lg"
-          onClick={() => scrollCarousel('left')}
-          aria-label="Scroll left"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <div
-          ref={carouselRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide px-10 py-2"
-          style={{ scrollSnapType: 'x mandatory' }}
-        >
-          {featuredMovies.map((movie) => (
-            <div key={movie.id} style={{ minWidth: 220, scrollSnapAlign: 'start' }}>
-              <MovieCard {...movie} />
-            </div>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-12">
+      {/* Movies Section */}
+      <section className="w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <h2 className="text-xl font-semibold w-full">{search ? 'Search Results (Movies)' : 'Trending Movies'}</h2>
+        </div>
+        {errorMovies && <div className="text-red-500">{errorMovies}</div>}
+        {!loadingMovies && moviesData.length === 0 && !errorMovies && (
+          <div className="text-gray-400">No movies found. Please try again later.</div>
+        )}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mx-auto">
+          {moviesData.map((item) => (
+            <MovieCard
+              key={item.id}
+              id={item.id}
+              imdbID={item.id}
+              title={truncateTitle(item.title)}
+              year={item.release_date ? item.release_date.slice(0, 4) : ''}
+              quality={item.vote_average >= 7 ? 'HD' : undefined}
+              poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
+            />
           ))}
         </div>
-        <button
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-900/80 hover:bg-gray-800 rounded-full p-2 shadow-lg"
-          onClick={() => scrollCarousel('right')}
-          aria-label="Scroll right"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-        </button>
-      </div>
-      {/* Trending Section */}
-      <div>
-        <div className="flex gap-2 mb-4">
-          <button
-            className={`px-4 py-1 rounded-t bg-gray-800 text-sm font-semibold ${trendingTab === 'movies' ? 'text-white border-b-2 border-red-500' : 'text-gray-400'}`}
-            onClick={() => setTrendingTab('movies')}
-          >
-            Movies
-          </button>
-          <button
-            className={`px-4 py-1 rounded-t bg-gray-800 text-sm font-semibold ${trendingTab === 'tv' ? 'text-white border-b-2 border-red-500' : 'text-gray-400'}`}
-            onClick={() => setTrendingTab('tv')}
-          >
-            TV Shows
-          </button>
+      </section>
+      {/* TV Shows Section */}
+      <section className="w-full">
+        <div className="flex items-center gap-2 mb-2">
+          <h2 className="text-xl font-semibold w-full">{search ? 'Search Results (TV Shows)' : 'Trending TV Shows'}</h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-          {filteredTrending.map((item) => (
-            <MovieCard key={item.id} {...item} />
+        {errorShows && <div className="text-red-500">{errorShows}</div>}
+        {!loadingShows && showsData.length === 0 && !errorShows && (
+          <div className="text-gray-400">No TV shows found. Please try again later.</div>
+        )}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mx-auto">
+          {showsData.map((item) => (
+            <MovieCard
+              key={item.id}
+              id={item.id}
+              imdbID={item.id}
+              title={truncateTitle(item.name)}
+              year={item.first_air_date ? item.first_air_date.slice(0, 4) : ''}
+              quality={item.vote_average >= 7 ? 'HD' : undefined}
+              poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
+            />
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 } 

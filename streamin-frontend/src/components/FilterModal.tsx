@@ -1,5 +1,23 @@
 import React from 'react';
 
+// Reusable Modal component
+export function Modal({ onClose, children }: { onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60" role="dialog" aria-modal="true">
+      <div className="bg-gray-800 rounded-lg shadow-lg w-full max-w-4xl mx-4 p-8 relative">
+        {children}
+        <button
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold"
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface FilterModalProps {
   onClose: () => void;
 }
@@ -16,9 +34,9 @@ const countries = [
 
 export default function FilterModal({ onClose }: FilterModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60" role="dialog" aria-modal="true" aria-labelledby="filter-modal-title">
       <div className="bg-gray-800 rounded-lg shadow-lg w-full max-w-4xl mx-4 p-8 relative">
-        <h2 className="text-3xl font-bold text-center mb-6 text-white">Filter</h2>
+        <h2 id="filter-modal-title" className="text-3xl font-bold text-center mb-6 text-white">Filter</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
             <label className="block text-gray-200 mb-2">Type:</label>
@@ -75,7 +93,7 @@ export default function FilterModal({ onClose }: FilterModalProps) {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6-6-6" /></svg>
             Filter
           </button>
-          <button className="bg-white text-gray-800 px-8 py-2 rounded text-lg font-semibold" onClick={onClose}>
+          <button className="bg-white text-gray-800 px-8 py-2 rounded text-lg font-semibold" onClick={onClose} aria-label="Close filter modal">
             Close
           </button>
         </div>

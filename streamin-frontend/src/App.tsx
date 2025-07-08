@@ -4,11 +4,11 @@ import './index.css'
 import Home from './pages/Home'
 import Movies from './pages/Movies'
 import MovieDetails from './pages/MovieDetails'
-import { FaHome, FaRocket, FaFilm, FaTv, FaAndroid } from 'react-icons/fa'
 import Sidebar from './components/Sidebar'
 import TVShows from './pages/TVShows'
 import SearchBar from './components/SearchBar'
 import FilterModal from './components/FilterModal'
+import TopIMDB from './pages/TopIMDB'
 
 const genres = [
   'Action', 'Action & Adventure', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'History', 'Horror', 'Kids', 'Music', 'Mystery', 'News', 'Reality', 'Romance', 'Sci-Fi & Fantasy', 'Science Fiction', 'Soap', 'Talk', 'Thriller', 'TV Movie', 'War', 'War & Politics', 'Western'
@@ -54,14 +54,21 @@ export default function App() {
             <Route path="/movies" element={<Movies search={search} />} />
             <Route path="/movies/:id" element={<MovieDetails />} />
             <Route path="/tv-shows" element={<TVShows search={search} />} />
+            <Route path="/top-imdb" element={<TopIMDB search={search} />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>
       {filterOpen && <FilterModal onClose={() => setFilterOpen(false)} />}
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 text-center py-4 mt-auto text-xs">
-        © {new Date().getFullYear()} Braflix. All rights reserved. | Terms | Contact
+      <footer className="bg-gray-900 text-gray-400 text-center py-4 mt-auto text-xs" role="contentinfo">
+        © {new Date().getFullYear()} AI flix. All rights reserved. | Terms | Contact
+        <span className="block mt-2">
+          <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" aria-label="The Movie Database (TMDB)">
+            <img src="/TMDB-logo-attibution.svg" alt="TMDB Logo" className="inline h-6 align-middle mr-1" style={{ display: 'inline', verticalAlign: 'middle' }} />
+            <span className="align-middle">This product uses data from TMDB.</span>
+          </a>
+        </span>
       </footer>
     </div>
   )
