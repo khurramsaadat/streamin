@@ -22,7 +22,7 @@ export default function TVShows({ search }: TVShowsProps) {
       ? searchTMDB('tv', search, 1, locale)
       : getPopular('tv', 1, locale);
     fetchShows
-      .then((results) => setShows(results))
+      .then((results: any[]) => setShows(results))
       .catch(() => setError('Failed to fetch popular TV shows'))
       .finally(() => setLoading(false));
   }, [search, locale.language, locale.region]);
@@ -39,11 +39,12 @@ export default function TVShows({ search }: TVShowsProps) {
           <MovieCard
             key={show.id}
             id={show.id}
-            imdbID={show.id}
             title={show.name}
             year={show.first_air_date ? show.first_air_date.slice(0, 4) : ''}
             quality={show.vote_average >= 7 ? 'HD' : undefined}
             poster={getPosterUrl(show.poster_path, tmdbConfig.images)}
+            rating={show.vote_average ? show.vote_average.toFixed(1) : undefined}
+            duration={show.episode_run_time && show.episode_run_time.length > 0 ? `${show.episode_run_time[0]} min` : 'N/A'}
           />
         ))}
       </div>

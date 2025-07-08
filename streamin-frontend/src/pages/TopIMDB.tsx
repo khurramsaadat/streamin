@@ -7,43 +7,48 @@ interface TopIMDBProps {
 const topImdbItems = [
   {
     id: '1',
-    imdbID: 'tt0111161', // The Shawshank Redemption
     title: 'The Shawshank Redemption',
     quality: 'HD',
     year: '1994',
-    duration: '142m',
+    duration: '142 min',
+    rating: '9.3',
+    poster: '', // Add poster URL if available
   },
   {
     id: '2',
-    imdbID: 'tt0068646', // The Godfather
     title: 'The Godfather',
     quality: 'HD',
     year: '1972',
-    duration: '175m',
+    duration: '175 min',
+    rating: '9.2',
+    poster: '',
   },
   {
     id: '3',
-    imdbID: 'tt0468569', // The Dark Knight
     title: 'The Dark Knight',
     quality: 'HD',
     year: '2008',
-    duration: '152m',
+    duration: '152 min',
+    rating: '9.0',
+    poster: '',
   },
   {
     id: '4',
-    imdbID: 'tt0944947', // Game of Thrones (TV)
     title: 'Game of Thrones',
     quality: 'HD',
     season: '8',
     episode: '6',
+    rating: '9.2',
+    poster: '',
   },
   {
     id: '5',
-    imdbID: 'tt0903747', // Breaking Bad (TV)
     title: 'Breaking Bad',
     quality: 'HD',
     season: '5',
     episode: '16',
+    rating: '9.5',
+    poster: '',
   },
   // ...add more top IMDB movies and TV shows
 ];
@@ -57,7 +62,16 @@ export default function TopIMDB({ search }: TopIMDBProps) {
       <h2 className="text-xl font-semibold mb-6 w-full">Top IMDB Movies & TV Shows</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full">
         {filtered.map((item) => (
-          <MovieCard key={item.id} {...item} />
+          <MovieCard
+            key={item.id}
+            id={item.id}
+            title={item.title}
+            year={item.year}
+            quality={item.quality}
+            duration={item.duration ? item.duration : 'N/A'}
+            rating={item.rating ? item.rating : undefined}
+            poster={item.poster}
+          />
         ))}
       </div>
     </div>

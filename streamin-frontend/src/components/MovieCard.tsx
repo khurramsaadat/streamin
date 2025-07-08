@@ -4,19 +4,18 @@ import { useState } from 'react';
 interface MovieCardProps {
   id: string;
   title: string;
-  imdbID?: string;
-  image?: string;
-  poster?: string;
   year?: string;
   duration?: string;
   quality?: string;
   season?: string;
   episode?: string;
+  poster?: string;
+  rating?: string;
 }
 
 const PLACEHOLDER = '/popcorn-placeholder.jpg';
 
-export default function MovieCard({ id, title, imdbID, image, poster, year, duration, quality, season, episode }: MovieCardProps) {
+export default function MovieCard({ id, title, year, duration, quality, season, episode, poster, rating }: MovieCardProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const posterSrc = !poster || poster === 'N/A' || imgError ? PLACEHOLDER : poster;
@@ -46,12 +45,23 @@ export default function MovieCard({ id, title, imdbID, image, poster, year, dura
           />
         )}
       </div>
-      <div className="flex gap-2 mt-2 mb-1">
-        {quality && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200 font-semibold">{quality}</span>}
-        {season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">SS {season}</span>}
-        {episode && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">EPS {episode}</span>}
-        {year && !season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{year}</span>}
-        {duration && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{duration}</span>}
+      <div className="flex gap-2 mt-2 mb-1 items-center justify-between">
+        <div className="flex gap-2">
+          {quality && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200 font-semibold">{quality}</span>}
+          {season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">SS {season}</span>}
+          {episode && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">EPS {episode}</span>}
+          {year && !season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{year}</span>}
+          {duration && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{duration}</span>}
+        </div>
+        {rating && (
+          <span
+            className="bg-yellow-400 text-black text-xs px-3 py-0.5 rounded font-bold shadow ml-2"
+            title={`User rating: ${rating}/10`}
+            aria-label={`User rating: ${rating}/10`}
+          >
+            {rating}
+          </span>
+        )}
       </div>
       <div className="text-sm text-white truncate font-medium">{title}</div>
     </Link>

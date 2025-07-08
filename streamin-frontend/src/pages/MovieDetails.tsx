@@ -104,13 +104,22 @@ export default function MovieDetails() {
       <div className="flex flex-col md:flex-row gap-6">
         <img src={posterUrl} alt={movie.title + ' poster'} className="w-full md:w-64 h-80 object-cover rounded" />
         <div className="flex-1">
-          <h2 className="text-3xl font-bold mb-2 text-white flex items-center gap-4">
-            {movie.title}
-            <span className="bg-yellow-500 text-black text-xs font-semibold px-2 py-1 rounded">
-              IMDB: {typeof movie.vote_average === 'number' && movie.vote_average > 0 ? movie.vote_average.toFixed(1) : 'N/A'}
-            </span>
-          </h2>
-          <p className="text-gray-400 mb-2">{movie.release_date?.slice(0, 4)}</p>
+          <h2 className="text-3xl font-bold mb-2 text-white">{movie.title}</h2>
+          <div className="flex gap-2 items-center mb-2">
+            {movie.release_date && (
+              <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{movie.release_date.slice(0, 4)}</span>
+            )}
+            <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{movie.runtime ? `${movie.runtime} min` : 'N/A'}</span>
+            {typeof movie.vote_average === 'number' && movie.vote_average > 0 && (
+              <span
+                className="bg-yellow-400 text-black text-xs px-3 py-0.5 rounded font-bold shadow ml-2"
+                title={`User rating: ${movie.vote_average.toFixed(1)}/10`}
+                aria-label={`User rating: ${movie.vote_average.toFixed(1)}/10`}
+              >
+                {movie.vote_average.toFixed(1)}
+              </span>
+            )}
+          </div>
           <p className="mb-4 text-gray-300">{movie.overview}</p>
           <div className="mb-4">
             <span className="font-semibold text-white">Cast:</span>

@@ -1,6 +1,3 @@
-import { useTMDBConfig } from './TMDBConfigContext';
-import { useLocale } from './LocaleContext';
-
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const DEFAULT_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
@@ -35,7 +32,11 @@ function setCachedResults(key: string, data: any) {
 }
 
 // Centralized TMDB fetch utility with error handling and locale support
-export async function fetchTMDB(endpoint: string, params: Record<string, string | number> = {}, locale?: { language: string; region: string }) {
+export async function fetchTMDB(
+  endpoint: string,
+  params: Record<string, string | number> = {},
+  locale?: { language: string; region: string }
+): Promise<any> {
   const url = new URL(`${TMDB_BASE_URL}${endpoint}`);
   url.searchParams.set('api_key', TMDB_API_KEY);
   if (locale) {
@@ -59,7 +60,11 @@ export async function fetchTMDB(endpoint: string, params: Record<string, string 
 }
 
 // Fetch popular movies or TV shows with caching
-export async function getPopular(type: 'movie' | 'tv', page = 1, locale?: { language: string; region: string }) {
+export async function getPopular(
+  type: 'movie' | 'tv',
+  page = 1,
+  locale?: { language: string; region: string }
+): Promise<any[]> {
   const cacheKey = getCacheKey(`${type}-popular`, page, locale);
   const cached = getCachedResults(cacheKey);
   if (cached) return cached;
@@ -69,7 +74,11 @@ export async function getPopular(type: 'movie' | 'tv', page = 1, locale?: { lang
 }
 
 // Fetch trending movies or TV shows with caching
-export async function getTrending(type: 'movie' | 'tv', page = 1, locale?: { language: string; region: string }) {
+export async function getTrending(
+  type: 'movie' | 'tv',
+  page = 1,
+  locale?: { language: string; region: string }
+): Promise<any[]> {
   const cacheKey = getCacheKey(`${type}-trending`, page, locale);
   const cached = getCachedResults(cacheKey);
   if (cached) return cached;
@@ -79,13 +88,21 @@ export async function getTrending(type: 'movie' | 'tv', page = 1, locale?: { lan
 }
 
 // Search movies or TV shows (no caching)
-export async function searchTMDB(type: 'movie' | 'tv', query: string, page = 1, locale?: { language: string; region: string }) {
+export async function searchTMDB(
+  type: 'movie' | 'tv',
+  query: string,
+  page = 1,
+  locale?: { language: string; region: string }
+): Promise<any[]> {
   const data = await fetchTMDB(`/search/${type}`, { query, page }, locale);
   return data.results;
 }
 
 // Get poster image URL from TMDB poster path using context if available
-export function getPosterUrl(posterPath?: string, config?: { base_url: string; poster_sizes: string[] }) {
+export function getPosterUrl(
+  posterPath?: string,
+  config?: { base_url: string; poster_sizes: string[] }
+): string {
   if (!posterPath) return '/popcorn-placeholder.jpg';
   if (config && config.base_url && config.poster_sizes && config.poster_sizes.length > 0) {
     // Use the recommended size (e.g., "w500" or the closest larger size)

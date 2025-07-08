@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { FaFilter, FaUser } from 'react-icons/fa';
 import MovieCard from '../components/MovieCard';
 import { getPopular, getPosterUrl, searchTMDB, fetchTMDB } from '../lib/tmdb';
 import { useTMDBConfig } from '../lib/TMDBConfigContext';
@@ -43,20 +42,20 @@ export default function Movies({ search }: MoviesProps) {
     setError(null);
     let fetchMovies: Promise<any[]>;
     if (genreId) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_genres: genreId, page: 1 }, locale).then(r => r.results);
+      fetchMovies = fetchTMDB('/discover/movie', { with_genres: genreId, page: 1 }, locale).then((r: any) => r.results);
     } else if (castId) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_cast: castId, page: 1 }, locale).then(r => r.results);
+      fetchMovies = fetchTMDB('/discover/movie', { with_cast: castId, page: 1 }, locale).then((r: any) => r.results);
     } else if (country) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_original_language: country, page: 1 }, locale).then(r => r.results);
+      fetchMovies = fetchTMDB('/discover/movie', { with_original_language: country, page: 1 }, locale).then((r: any) => r.results);
     } else if (company) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_companies: company, page: 1 }, locale).then(r => r.results);
+      fetchMovies = fetchTMDB('/discover/movie', { with_companies: company, page: 1 }, locale).then((r: any) => r.results);
     } else if (search) {
       fetchMovies = searchTMDB('movie', search, 1, locale);
     } else {
       fetchMovies = getPopular('movie', 1, locale);
     }
     fetchMovies
-      .then((results) => setMoviesData(results))
+      .then((results: any[]) => setMoviesData(results))
       .catch(() => setError('Failed to fetch movies'))
       .finally(() => setLoading(false));
   }, [search, locale.language, locale.region, genreId, castId, country, company]);
@@ -94,11 +93,12 @@ export default function Movies({ search }: MoviesProps) {
           <MovieCard
             key={movie.id}
             id={movie.id}
-            imdbID={movie.id}
             title={movie.title}
             year={movie.release_date ? movie.release_date.slice(0, 4) : ''}
             quality={movie.vote_average >= 7 ? 'HD' : undefined}
             poster={getPosterUrl(movie.poster_path, tmdbConfig.images)}
+            rating={movie.vote_average ? movie.vote_average.toFixed(1) : undefined}
+            duration={movie.runtime ? `${movie.runtime} min` : 'N/A'}
           />
         ))}
       </div>

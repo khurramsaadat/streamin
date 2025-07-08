@@ -3,7 +3,6 @@ import MovieCard from '../components/MovieCard';
 import { getTrending, getPosterUrl, searchTMDB } from '../lib/tmdb';
 import { useTMDBConfig } from '../lib/TMDBConfigContext';
 import { useLocale } from '../lib/LocaleContext';
-import { FaDatabase } from 'react-icons/fa';
 
 interface HomeProps {
   search: string;
@@ -30,7 +29,7 @@ export default function Home({ search }: HomeProps) {
       ? searchTMDB('movie', search, 1, locale)
       : getTrending('movie', 1, locale);
     fetchMovies
-      .then((results) => setMoviesData(results))
+      .then((results: any[]) => setMoviesData(results))
       .catch(() => setErrorMovies('Failed to fetch trending movies'))
       .finally(() => setLoadingMovies(false));
   }, [search, locale.language, locale.region]);
@@ -42,7 +41,7 @@ export default function Home({ search }: HomeProps) {
       ? searchTMDB('tv', search, 1, locale)
       : getTrending('tv', 1, locale);
     fetchShows
-      .then((results) => setShowsData(results))
+      .then((results: any[]) => setShowsData(results))
       .catch(() => setErrorShows('Failed to fetch trending TV shows'))
       .finally(() => setLoadingShows(false));
   }, [search, locale.language, locale.region]);
@@ -63,11 +62,12 @@ export default function Home({ search }: HomeProps) {
             <MovieCard
               key={item.id}
               id={item.id}
-              imdbID={item.id}
               title={truncateTitle(item.title)}
               year={item.release_date ? item.release_date.slice(0, 4) : ''}
               quality={item.vote_average >= 7 ? 'HD' : undefined}
               poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
+              rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
+              duration={item.runtime ? `${item.runtime} min` : 'N/A'}
             />
           ))}
         </div>
@@ -86,11 +86,12 @@ export default function Home({ search }: HomeProps) {
             <MovieCard
               key={item.id}
               id={item.id}
-              imdbID={item.id}
               title={truncateTitle(item.name)}
               year={item.first_air_date ? item.first_air_date.slice(0, 4) : ''}
               quality={item.vote_average >= 7 ? 'HD' : undefined}
               poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
+              rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
+              duration={item.episode_run_time && item.episode_run_time.length > 0 ? `${item.episode_run_time[0]} min` : 'N/A'}
             />
           ))}
         </div>

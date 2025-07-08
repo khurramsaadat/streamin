@@ -5,12 +5,6 @@ import { useLocale } from '../lib/LocaleContext';
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
-  genreOpen: boolean;
-  setGenreOpen: (open: boolean) => void;
-  countryOpen: boolean;
-  setCountryOpen: (open: boolean) => void;
-  genres: string[];
-  countries: string[];
   onFilterClick?: () => void;
 }
 
@@ -34,12 +28,6 @@ const regions = [
 export default function Sidebar({
   sidebarOpen,
   setSidebarOpen,
-  genreOpen,
-  setGenreOpen,
-  countryOpen,
-  setCountryOpen,
-  genres,
-  countries,
   onFilterClick,
 }: SidebarProps) {
   const { language, region, setLanguage, setRegion } = useLocale();
