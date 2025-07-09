@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
-import { getPopular, getPosterUrl, searchTMDB, fetchTMDB } from '../lib/tmdb';
+import { getPopular, getPosterUrl, searchTMDB } from '../lib/tmdb';
 import { useTMDBConfig } from '../lib/TMDBConfigContext';
 import { useLocale } from '../lib/LocaleContext';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -23,9 +23,7 @@ export default function Movies({ search = '' }: MoviesProps) {
   const navigate = useNavigate();
 
   // Read filter params
-  const genreId = query.get('genreId');
   const genre = query.get('genre');
-  const castId = query.get('castId');
   const cast = query.get('cast');
   const country = query.get('country');
   const company = query.get('company');

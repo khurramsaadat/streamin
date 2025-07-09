@@ -33,8 +33,6 @@ export default function TVShows({ search = '' }: TVShowsProps) {
       .finally(() => setLoading(false));
   }, [search, locale.language, locale.region]);
 
-  const filtered = shows;
-
   return (
     <div className="flex flex-col gap-8">
       <h2 className="text-xl font-semibold mb-6 w-full">{search ? 'Search Results (TV Shows)' : 'Popular TV Shows'}</h2>
