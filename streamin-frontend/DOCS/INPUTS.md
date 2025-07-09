@@ -12,3 +12,9 @@
 - User approved summary as main content for changelog and progress
 - User confirmed directory structure should reflect only streamin-frontend folder
 - User requested save 
+
+## 2024-07-09
+- User requested removal of homepage hero/banner and addition of intro text
+- User requested MovieCard routing fix for TV and movie details
+- User requested creation of TVDetails page matching MovieDetails
+- User confirmed all changes and requested save 

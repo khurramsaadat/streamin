@@ -11,18 +11,20 @@ interface MovieCardProps {
   episode?: string;
   poster?: string;
   rating?: string;
+  media_type?: 'movie' | 'tv'; // Add media_type prop
 }
 
 const PLACEHOLDER = '/popcorn-placeholder.jpg';
 
-export default function MovieCard({ id, title, year, duration, quality, season, episode, poster, rating }: MovieCardProps) {
+export default function MovieCard({ id, title, year, duration, quality, season, episode, poster, rating, media_type = 'movie' }: MovieCardProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const posterSrc = !poster || poster === 'N/A' || imgError ? PLACEHOLDER : poster;
+  const route = media_type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
 
   return (
     <Link
-      to={`/movies/${id}`}
+      to={route}
       className="block group"
       role="link"
       aria-label={`View details for ${title}`}

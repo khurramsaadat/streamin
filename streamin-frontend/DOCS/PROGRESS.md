@@ -20,3 +20,12 @@
 - MovieCard and Sidebar standardized and visually improved
 - All TypeScript and linter errors addressed; type check passed
 - All changes tested and verified 
+
+## 2024-07-09
+- Created TVDetails page matching MovieDetails features (poster, cast, genres, trailer, etc.)
+- Registered /tv/:id route in App.tsx for TV show details
+- Fixed MovieCard routing for movies and TV shows
+- Removed homepage hero/banner, added intro text, adjusted spacing
+- Cleaned up unused imports and fixed all TypeScript/linter errors
+- Ran full type check (npx tsc --noEmit): no errors
+- All changes tested and verified 

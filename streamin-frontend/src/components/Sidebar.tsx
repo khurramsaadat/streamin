@@ -37,14 +37,14 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`fixed top-0 left-0 z-40 h-full w-56 text-white shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:static md:shadow-none`}
+      className={`fixed top-0 left-0 z-40 h-full w-56 text-white shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:shadow-none portrait:!static portrait:!-translate-x-full`}
       aria-label="Sidebar navigation"
       role="complementary"
       style={{ backgroundColor: '#23263a' }}
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
-          <button className="md:hidden" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
+          <button className="inline-flex lg:hidden portrait:inline-flex" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>

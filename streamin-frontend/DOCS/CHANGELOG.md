@@ -141,3 +141,53 @@
 - All new features tested and verified
 - See PROGRESS.md for detailed progress log
 - Full type check (npx tsc --noEmit) performed: no errors found 
+
+## 2024-07-09
+
+### Major Changes
+- Added TVDetails page to match MovieDetails features (poster, backdrop, cast, genres, trailer, etc.)
+- Registered /tv/:id route in App.tsx for TV show details
+- Fixed MovieCard routing: now uses media_type prop to route to /movie/:id or /tv/:id as appropriate
+- Fixed homepage: removed hero/banner, added welcoming intro text, adjusted spacing for mobile/desktop
+- Cleaned up unused imports and addressed all TypeScript/linter errors
+- Verified all changes with type check (npx tsc --noEmit)
+
+### Directory Structure (unchanged)
+- streamin-frontend/
+  - src/
+    - components/
+      - MovieCard.tsx
+      - Sidebar.tsx
+      - FilterModal.tsx
+    - lib/
+      - tmdb.ts
+      - TMDBConfigContext.tsx
+      - LocaleContext.tsx
+    - pages/
+      - Home.tsx
+      - Movies.tsx
+      - TVShows.tsx
+      - MovieDetails.tsx
+      - TVDetails.tsx
+      - TopIMDB.tsx
+    - main.tsx
+    - index.css
+    - App.tsx
+  - public/
+    - TMDB-logo-attibution.svg
+  - DOCS/
+    - CHANGELOG.md
+    - PROGRESS.md
+    - INPUTS.md
+  - .gitignore
+  - index.html
+  - package-lock.json
+  - package.json
+  - postcss.config.cjs
+  - tsconfig.app.json
+  - tailwind.config.js
+  - vite.config.ts
+  - README.md
+  - tsconfig.json
+  - tsconfig.node.json
+  - eslint.config.js 
