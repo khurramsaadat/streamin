@@ -4,8 +4,14 @@ import { useLocale } from '../lib/LocaleContext';
 
 interface SidebarProps {
   sidebarOpen: boolean;
-  setSidebarOpen: (open: boolean) => void;
-  onFilterClick?: () => void;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  genreOpen: boolean;
+  setGenreOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  countryOpen: boolean;
+  setCountryOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  companyOpen: boolean;
+  setCompanyOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onFilterClick: () => void;
 }
 
 const languages = [
