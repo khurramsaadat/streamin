@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
     <LocaleProvider>
       <TMDBConfigProvider>
         <BrowserRouter>
-          <App />
+    <App />
         </BrowserRouter>
       </TMDBConfigProvider>
     </LocaleProvider>

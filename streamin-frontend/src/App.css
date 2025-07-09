@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Header: slightly lighter than main background */
+header {
+  background-color: #23263a !important;
+}
+
+/* Sidebar: slightly lighter than main background */
+.sidebar, aside[aria-label="Sidebar navigation"] {
+  background-color: #23263a !important;
+}
+
+/* Main card section: keep as current (bg-gray-900) */
+.main-content {
+  background-color: #181a29;
+}

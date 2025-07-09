@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTMDBConfig } from '../lib/TMDBConfigContext';
 import { useLocale } from '../lib/LocaleContext';
+import type { Genre } from '../types';
 
 const FALLBACK_VIDEO = 'https://www.w3schools.com/html/mov_bbb.mp4';
 
@@ -49,13 +50,13 @@ export default function MovieDetails() {
 
   const posterUrl = movie.poster_path ? `${tmdbConfig.images.base_url}w500${movie.poster_path}` : '/popcorn-placeholder.jpg';
   const backdropUrl = movie.backdrop_path ? `${tmdbConfig.images.base_url}w1280${movie.backdrop_path}` : posterUrl;
-  const genres = movie.genres || [];
+  const genres: Genre[] = movie.genres || [];
   const companies = movie.production_companies || [];
   const countries = movie.production_countries || [];
 
   // Handlers for clickable filters
   const handleCastClick = (person: any) => navigate(`/movies?cast=${encodeURIComponent(person.name)}&castId=${person.id}`);
-  const handleGenreClick = (genre: any) => navigate(`/movies?genre=${encodeURIComponent(genre.name)}&genreId=${genre.id}`);
+  const handleGenreClick = (genre: Genre) => navigate(`/movies?genre=${encodeURIComponent(genre.name)}&genreId=${genre.id}`);
   const handleCountryClick = (country: any) => navigate(`/movies?country=${encodeURIComponent(country.iso_3166_1)}`);
   const handleCompanyClick = (company: any) => navigate(`/movies?company=${encodeURIComponent(company.id)}`);
 
@@ -122,7 +123,7 @@ export default function MovieDetails() {
           </div>
           <p className="mb-4 text-gray-300">{movie.overview}</p>
           <div className="mb-4">
-            <span className="font-semibold text-white">Cast:</span>
+            <span className="font-semibold text-white">Cast: </span>
             <span className="text-gray-300">
               {cast.length > 0
                 ? cast.map((person, idx) => (
@@ -144,7 +145,7 @@ export default function MovieDetails() {
             <span className="font-semibold">Released:</span> {movie.release_date || 'N/A'}<br />
             <span className="font-semibold">Genre:</span>{' '}
             {genres.length > 0
-              ? genres.map((genre: any, idx: number) => (
+              ? genres.map((genre: Genre, idx: number) => (
                   <span
                     key={genre.id}
                     className="hover:underline hover:text-red-400 cursor-pointer"

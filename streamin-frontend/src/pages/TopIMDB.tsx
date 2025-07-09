@@ -1,79 +1,56 @@
+import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
+import { getPosterUrl } from '../lib/tmdb';
+import { useTMDBConfig } from '../lib/TMDBConfigContext';
 
-interface TopIMDBProps {
-  search: string;
-}
+export default function TopIMDB() {
+  const [movies, setMovies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const tmdbConfig = useTMDBConfig();
 
-const topImdbItems = [
-  {
-    id: '1',
-    title: 'The Shawshank Redemption',
-    quality: 'HD',
-    year: '1994',
-    duration: '142 min',
-    rating: '9.3',
-    poster: '', // Add poster URL if available
-  },
-  {
-    id: '2',
-    title: 'The Godfather',
-    quality: 'HD',
-    year: '1972',
-    duration: '175 min',
-    rating: '9.2',
-    poster: '',
-  },
-  {
-    id: '3',
-    title: 'The Dark Knight',
-    quality: 'HD',
-    year: '2008',
-    duration: '152 min',
-    rating: '9.0',
-    poster: '',
-  },
-  {
-    id: '4',
-    title: 'Game of Thrones',
-    quality: 'HD',
-    season: '8',
-    episode: '6',
-    rating: '9.2',
-    poster: '',
-  },
-  {
-    id: '5',
-    title: 'Breaking Bad',
-    quality: 'HD',
-    season: '5',
-    episode: '16',
-    rating: '9.5',
-    poster: '',
-  },
-  // ...add more top IMDB movies and TV shows
-];
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_API_KEY}&sort_by=vote_average.desc&vote_count.gte=1000&page=1`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('TopIMDB API:', data);
+        setMovies(data.results || []);
+      })
+      .catch((err) => {
+        console.error('TopIMDB API error:', err);
+        setError('Failed to fetch top rated movies');
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-export default function TopIMDB({ search }: TopIMDBProps) {
-  const filtered = topImdbItems.filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  );
   return (
     <div className="flex flex-col gap-8">
-      <h2 className="text-xl font-semibold mb-6 w-full">Top IMDB Movies & TV Shows</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full">
-        {filtered.map((item) => (
-          <MovieCard
-            key={item.id}
-            id={item.id}
-            title={item.title}
-            year={item.year}
-            quality={item.quality}
-            duration={item.duration ? item.duration : 'N/A'}
-            rating={item.rating ? item.rating : undefined}
-            poster={item.poster}
-          />
-        ))}
-      </div>
+      <h2 className="text-xl font-semibold mb-6 w-full">Top Rated Movies</h2>
+      {error && <div className="text-red-500 mb-2">{error}</div>}
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-3 w-full">
+          {Array.from({ length: 20 }).map((_, idx) => (
+            <div key={idx} className="rounded-lg bg-gray-800 animate-pulse h-60 w-full" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-3 w-full">
+          {movies.slice(0, 20).map((item) => (
+            <MovieCard
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              year={item.release_date ? item.release_date.slice(0, 4) : ''}
+              quality={item.vote_average >= 7 ? 'HD' : undefined}
+              poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
+              rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
+              duration={item.runtime ? `${item.runtime} min` : undefined}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 } 

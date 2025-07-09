@@ -6,14 +6,14 @@ import { useLocale } from '../lib/LocaleContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface MoviesProps {
-  search: string;
+  search?: string;
 }
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-export default function Movies({ search }: MoviesProps) {
+export default function Movies({ search = '' }: MoviesProps) {
   const [moviesData, setMoviesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,25 +40,20 @@ export default function Movies({ search }: MoviesProps) {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    let fetchMovies: Promise<any[]>;
-    if (genreId) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_genres: genreId, page: 1 }, locale).then((r: any) => r.results);
-    } else if (castId) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_cast: castId, page: 1 }, locale).then((r: any) => r.results);
-    } else if (country) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_original_language: country, page: 1 }, locale).then((r: any) => r.results);
-    } else if (company) {
-      fetchMovies = fetchTMDB('/discover/movie', { with_companies: company, page: 1 }, locale).then((r: any) => r.results);
-    } else if (search) {
-      fetchMovies = searchTMDB('movie', search, 1, locale);
-    } else {
-      fetchMovies = getPopular('movie', 1, locale);
-    }
+    const fetchMovies = search
+      ? searchTMDB('movie', search, 1, locale)
+      : getPopular('movie', 1, locale);
     fetchMovies
-      .then((results: any[]) => setMoviesData(results))
-      .catch(() => setError('Failed to fetch movies'))
+      .then((results: any[]) => {
+        console.log('Movies API results:', results);
+        setMoviesData(results);
+      })
+      .catch((err) => {
+        console.error('Movies API error:', err);
+        setError('Failed to fetch movies');
+      })
       .finally(() => setLoading(false));
-  }, [search, locale.language, locale.region, genreId, castId, country, company]);
+  }, [search, locale.language, locale.region]);
 
   // Clear filter handler
   const handleClearFilter = () => navigate('/movies');
@@ -84,24 +79,32 @@ export default function Movies({ search }: MoviesProps) {
         {filterLabel ? `Filtered Movies` : search ? 'Search Results (Movies)' : 'Popular Movies'}
       </h2>
       {loading && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
+      {error && <div className="text-red-500 mb-2">{error}</div>}
       {!loading && moviesData.length === 0 && !error && (
         <div className="text-gray-400">No movies found. Please try again later.</div>
       )}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 w-full">
-        {moviesData.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            id={movie.id}
-            title={movie.title}
-            year={movie.release_date ? movie.release_date.slice(0, 4) : ''}
-            quality={movie.vote_average >= 7 ? 'HD' : undefined}
-            poster={getPosterUrl(movie.poster_path, tmdbConfig.images)}
-            rating={movie.vote_average ? movie.vote_average.toFixed(1) : undefined}
-            duration={movie.runtime ? `${movie.runtime} min` : 'N/A'}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-3">
+          {Array.from({ length: 20 }).map((_, idx) => (
+            <div key={idx} className="rounded-lg bg-gray-800 animate-pulse h-60 w-full" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10 gap-3">
+          {moviesData.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              id={movie.id}
+              title={movie.title}
+              year={movie.release_date ? movie.release_date.slice(0, 4) : ''}
+              quality={movie.vote_average >= 7 ? 'HD' : undefined}
+              poster={getPosterUrl(movie.poster_path, tmdbConfig.images)}
+              rating={movie.vote_average ? movie.vote_average.toFixed(1) : undefined}
+              duration={movie.runtime ? `${movie.runtime} min` : undefined}
+            />
+          ))}
+        </div>
+      )}
       {/* Pagination */}
       <div className="flex justify-center items-center gap-2 mt-8 mb-4 w-full">
         <button className="px-3 py-1 rounded bg-gray-800 text-gray-300 hover:bg-gray-700">1</button>

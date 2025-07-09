@@ -28,22 +28,24 @@ export default function MovieCard({ id, title, year, duration, quality, season, 
       aria-label={`View details for ${title}`}
     >
       <div className="rounded-lg overflow-hidden shadow-lg bg-gray-800 group-hover:scale-105 transition-transform duration-200">
-        <img
-          src={posterSrc}
-          alt={imgError ? 'Poster not available' : `${title} poster`}
-          className={`w-full h-60 object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-          loading="lazy"
-          onLoad={() => setImgLoaded(true)}
-          onError={() => setImgError(true)}
-        />
-        {!imgLoaded && (
+        <div className="w-full aspect-[2/3] bg-gray-900 flex items-center justify-center">
           <img
-            src={PLACEHOLDER}
-            alt="Loading poster..."
-            className="w-full h-60 object-cover absolute top-0 left-0 opacity-100"
-            style={{ zIndex: 1 }}
+            src={posterSrc}
+            alt={imgError ? 'Poster not available' : `${title} poster`}
+            className={`w-full h-full object-contain transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            loading="lazy"
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
           />
-        )}
+          {!imgLoaded && (
+            <img
+              src={PLACEHOLDER}
+              alt="Loading poster..."
+              className="w-full h-full object-contain absolute top-0 left-0 opacity-100"
+              style={{ zIndex: 1 }}
+            />
+          )}
+        </div>
       </div>
       <div className="flex gap-2 mt-2 mb-1 items-center justify-between">
         <div className="flex gap-2">
@@ -51,7 +53,7 @@ export default function MovieCard({ id, title, year, duration, quality, season, 
           {season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">SS {season}</span>}
           {episode && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">EPS {episode}</span>}
           {year && !season && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{year}</span>}
-          {duration && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{duration}</span>}
+          {duration && duration !== 'N/A' && <span className="bg-gray-700 text-xs px-2 py-0.5 rounded text-gray-200">{duration}</span>}
         </div>
         {rating && (
           <span
