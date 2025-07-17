@@ -57,6 +57,7 @@ export default function App() {
             <Route path="/movies" element={<Movies search={search} />} />
             <Route path="/tv-shows" element={<TVShows search={search} />} />
             <Route path="/movies/:id" element={<MovieDetails />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/tv/:id" element={<TVDetails />} />
             <Route path="/top-imdb" element={<TopIMDB />} />
             <Route path="/login" element={<Login />} />

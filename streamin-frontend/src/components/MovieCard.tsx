@@ -43,7 +43,7 @@ export default function MovieCard({ id, title, year, duration, quality, season, 
             <img
               src={PLACEHOLDER}
               alt="Loading poster..."
-              className="w-full h-full object-contain absolute top-0 left-0 opacity-100"
+              className="w-full h-full object-contain absolute top-0 left-0 opacity-100 pointer-events-none"
               style={{ zIndex: 1 }}
             />
           )}

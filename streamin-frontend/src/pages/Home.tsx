@@ -101,6 +101,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.runtime ? `${item.runtime} min` : 'N/A'}
+                  media_type="movie"
                 />
               ))}
             </div>
@@ -119,6 +120,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.runtime ? `${item.runtime} min` : 'N/A'}
+                  media_type="movie"
                 />
               ))}
             </div>
@@ -137,6 +139,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.runtime ? `${item.runtime} min` : 'N/A'}
+                  media_type="movie"
                 />
               ))}
             </div>
@@ -155,6 +158,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.episode_run_time && item.episode_run_time.length > 0 ? `${item.episode_run_time[0]} min` : 'N/A'}
+                  media_type="tv"
                 />
               ))}
             </div>
@@ -173,6 +177,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.episode_run_time && item.episode_run_time.length > 0 ? `${item.episode_run_time[0]} min` : 'N/A'}
+                  media_type="tv"
                 />
               ))}
             </div>
@@ -191,6 +196,7 @@ export default function Home({ search = '' }: HomeProps) {
                   poster={getPosterUrl(item.poster_path, tmdbConfig.images)}
                   rating={item.vote_average ? item.vote_average.toFixed(1) : undefined}
                   duration={item.runtime ? `${item.runtime} min` : item.episode_run_time && item.episode_run_time.length > 0 ? `${item.episode_run_time[0]} min` : 'N/A'}
+                  media_type={item.media_type || (item.title ? 'movie' : 'tv')}
                 />
               ))}
             </div>
