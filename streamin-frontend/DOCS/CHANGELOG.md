@@ -191,3 +191,61 @@
   - tsconfig.json
   - tsconfig.node.json
   - eslint.config.js 
+
+## 2024-07-10
+
+### Build & TypeScript Fixes
+- Removed all unused imports from About.tsx, Home.tsx, Privacy.tsx, and Terms.tsx to resolve TS6133 errors ("is declared but its value is never read").
+- Fixed Netlify build failure caused by unused imports.
+- Ran full type check (`npx tsc --noEmit`): no errors found.
+
+### Directory Structure (unchanged)
+- streamin-frontend/
+  - src/
+    - components/
+      - MovieCard.tsx
+      - Sidebar.tsx
+      - FilterModal.tsx
+    - lib/
+      - tmdb.ts
+      - TMDBConfigContext.tsx
+      - LocaleContext.tsx
+    - pages/
+      - Home.tsx
+      - Movies.tsx
+      - TVShows.tsx
+      - MovieDetails.tsx
+      - TVDetails.tsx
+      - TopIMDB.tsx
+      - About.tsx
+      - Privacy.tsx
+      - Terms.tsx
+    - main.tsx
+    - index.css
+    - App.tsx
+  - public/
+    - TMDB-logo-attibution.svg
+    - favicon.ico
+    - popcorn-placeholder.jpg
+  - DOCS/
+    - CHANGELOG.md
+    - PROGRESS.md
+    - INPUTS.md
+    - fetch.md
+  - .gitignore
+  - index.html
+  - package-lock.json
+  - package.json
+  - postcss.config.cjs
+  - tsconfig.app.json
+  - tailwind.config.js
+  - vite.config.ts
+  - README.md
+  - tsconfig.json
+  - tsconfig.node.json
+  - eslint.config.js
+
+### Notes
+- All build and type errors resolved and verified.
+- See PROGRESS.md for detailed progress log.
+- See INPUTS.md for user input log. 

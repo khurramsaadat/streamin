@@ -18,3 +18,7 @@
 - User requested MovieCard routing fix for TV and movie details
 - User requested creation of TVDetails page matching MovieDetails
 - User confirmed all changes and requested save 
+
+## 2024-07-10
+- User reported Netlify build failure due to TS6133 errors (unused imports)
+- User requested fix and confirmed save with 'save@kh-rules.mdc' 

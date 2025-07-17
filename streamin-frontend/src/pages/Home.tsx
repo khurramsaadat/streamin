@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
-import { getTrending, getPopular, fetchTMDB, getPosterUrl, searchTMDB } from '../lib/tmdb';
+import { getPopular, fetchTMDB, getPosterUrl } from '../lib/tmdb';
 import { useTMDBConfig } from '../lib/TMDBConfigContext';
 import { useLocale } from '../lib/LocaleContext';
 
